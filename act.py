@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from enum import Enum
 from pydantic import BaseModel
 
@@ -17,6 +17,8 @@ fake_name_db = [{"KJH":"13"},{"ZHH":"14"},{"KJHH":"15"}]
 
 app = FastAPI()
 
+items = {"foo": "the foo wrestlers"}
+
 @app.post("/items/")
 async def create_item(item: Item):
     return item
@@ -31,6 +33,9 @@ async def root():
 
 @app.get("/items/{item_id}")
 async def read_item(item_id: str, q: str | None = None, short: bool = False):
+    if item_id not in items:
+        return HTTPException(status_code=404, detail="Item not found"
+        header=)
     item = {"item_id": item_id}
     if q:
         item.update({"q": q})
